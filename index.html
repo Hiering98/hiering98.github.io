@@ -79,10 +79,15 @@
             }
         }
     </style>
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
     <h1>Über mich</h1>
-    <p>Mein Name ist Julian Hering. Ich studiere im 5. Semester Geoinformatik und Vermessung an der Hochschule Mainz. Vor meinem Studium habe ich eine Ausbildung als Vermessungstechniker absolviert.</p>
+    <div style="display:flex; justify-content:center; align-items:center; margin-bottom:24px;">
+        <p style="max-width:500px; text-align:center; font-size:1.15em; background:#fff; padding:24px 32px; border-radius:16px; box-shadow:0 2px 8px rgba(32,181,129,0.08); color:#222;">Mein Name ist Julian Hering. Ich studiere im 5. Semester Geoinformatik und Vermessung an der Hochschule Mainz. Vor meinem Studium habe ich eine Ausbildung als Vermessungstechniker absolviert.</p>
+    </div>
     
     <h2>Lebenslauf</h2>
     <table border="1" style="border-collapse: collapse; width: 100%;">
@@ -114,18 +119,41 @@
     <h2>Meine Wirkungsstätten</h2>
     <div class="gallery">
         <figure>
-            <img src="https://staticmap.openstreetmap.de/staticmap.php?center=49.749992,6.637143&zoom=13&size=250x180&maptype=mapnik" alt="Kartenausschnitt Trier" style="width:100%; border-radius:8px;">
+            <div id="map-trier" style="height:180px; width:100%; border-radius:16px;"></div>
             <figcaption style="font-style:italic; color:#555;">Trier (Berufsschule)</figcaption>
         </figure>
         <figure>
-            <img src="https://staticmap.openstreetmap.de/staticmap.php?center=50.688889,7.648611&zoom=13&size=250x180&maptype=mapnik" alt="Kartenausschnitt Altenkirchen" style="width:100%; border-radius:8px;">
+            <div id="map-ak" style="height:180px; width:100%; border-radius:16px;"></div>
             <figcaption style="font-style:italic; color:#555;">Altenkirchen (Arbeitsstätte)</figcaption>
         </figure>
         <figure>
-            <img src="https://staticmap.openstreetmap.de/staticmap.php?center=49.9935,8.2478&zoom=13&size=250x180&maptype=mapnik" alt="Kartenausschnitt Mainz" style="width:100%; border-radius:8px;">
+            <div id="map-mainz" style="height:180px; width:100%; border-radius:16px;"></div>
             <figcaption style="font-style:italic; color:#555;">Mainz (Hochschule)</figcaption>
         </figure>
     </div>
+    <script>
+        // Trier
+        var mapTrier = L.map('map-trier').setView([49.749992, 6.637143], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(mapTrier);
+        L.marker([49.749992, 6.637143]).addTo(mapTrier);
+        // Altenkirchen
+        var mapAK = L.map('map-ak').setView([50.688889, 7.648611], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(mapAK);
+        L.marker([50.688889, 7.648611]).addTo(mapAK);
+        // Mainz
+        var mapMainz = L.map('map-mainz').setView([49.9935, 8.2478], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(mapMainz);
+        L.marker([49.9935, 8.2478]).addTo(mapMainz);
+    </script>
 
     <h2>Links</h2>
     <ul style="max-width:700px; margin:32px auto 0 auto; background:#fff; padding:20px 28px; border-radius:12px; box-shadow:0 2px 8px rgba(32,181,129,0.08);">
