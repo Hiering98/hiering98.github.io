@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intro über Julian Hering</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f8f9fa;
+            color: #222;
+            margin: 0;
+            padding: 0 10px;
+            line-height: 1.8;
+        }
+        h1, h2 {
+            color: #20b581;
+            text-align: center;
+            margin-top: 32px;
+            margin-bottom: 18px;
+        }
+        table {
+            background: #fff;
+            margin: 28px auto;
+            width: 100%;
+            max-width: 700px;
+            box-shadow: 0 4px 16px rgba(32,181,129,0.10);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 16px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        th {
+            background: #e9f7f2;
+            color: #20b581;
+        }
+        tr:hover td {
+            background: #f0faf7;
+        }
+        img {
+            box-shadow: 0 4px 16px rgba(32,181,129,0.15);
+            border-radius: 12px;
+        }
+        figcaption {
+            margin-top: 10px;
+            font-size: 1em;
+        }
+        .gallery {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 32px;
+            margin-top: 32px;
+        }
+        .gallery figure {
+            text-align: center;
+            width: 30%;
+            min-width: 220px;
+            margin: 0;
+        }
+        .gallery img {
+            box-shadow: 0 4px 16px rgba(32,181,129,0.18);
+            border-radius: 16px;
+        }
+        @media (max-width: 720px) {
+            .gallery {
+                flex-direction: column;
+                align-items: center;
+            }
+            .gallery figure {
+                width: 95%;
+                margin-bottom: 28px;
+            }
+            table {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Über mich</h1>
+    <p>Mein Name ist Julian Hering. Ich studiere im 5. Semester Geoinformatik und Vermessung an der Hochschule Mainz. Vor meinem Studium habe ich eine Ausbildung als Vermessungstechniker absolviert.</p>
+    
+    <h2>Lebenslauf</h2>
+    <table border="1" style="border-collapse: collapse; width: 100%;">
+        <tr>
+            <th>Jahr</th>
+            <th>Station</th>
+            <th>Beschreibung</th>
+        </tr>
+        <tr>
+            <td>2018–2021</td>
+            <td>Ausbildung</td>
+            <td>Vermessungstechniker</td>
+        </tr>
+        <tr>
+            <td>2021–2023</td>
+            <td>Berufserfahrung</td>
+            <td>Vermessungstechniker</td>
+        </tr>
+        <tr>
+            <td>2023–heute</td>
+            <td>Studium</td>
+            <td>Geoinformatik und Vermessung, HS Mainz</td>
+        </tr>
+    </table>
+
+    <img src="https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=600&q=80" alt="Student beim Lernen" style="display:block; margin:20px auto; max-width:300px; border-radius:8px;">
+    <figcaption style="text-align:center; font-style:italic; color:#555;">Symbolbild: Ein Student beim Lernen</figcaption>
+
+    <h2>Meine Wirkungsstätten</h2>
+    <div class="gallery">
+        <figure>
+            <img src="https://staticmap.openstreetmap.de/staticmap.php?center=49.749992,6.637143&zoom=13&size=250x180&maptype=mapnik" alt="Kartenausschnitt Trier" style="width:100%; border-radius:8px;">
+            <figcaption style="font-style:italic; color:#555;">Trier (Berufsschule)</figcaption>
+        </figure>
+        <figure>
+            <img src="https://staticmap.openstreetmap.de/staticmap.php?center=50.688889,7.648611&zoom=13&size=250x180&maptype=mapnik" alt="Kartenausschnitt Altenkirchen" style="width:100%; border-radius:8px;">
+            <figcaption style="font-style:italic; color:#555;">Altenkirchen (Arbeitsstätte)</figcaption>
+        </figure>
+        <figure>
+            <img src="https://staticmap.openstreetmap.de/staticmap.php?center=49.9935,8.2478&zoom=13&size=250x180&maptype=mapnik" alt="Kartenausschnitt Mainz" style="width:100%; border-radius:8px;">
+            <figcaption style="font-style:italic; color:#555;">Mainz (Hochschule)</figcaption>
+        </figure>
+    </div>
+
+    <h2>Links</h2>
+    <ul style="max-width:700px; margin:32px auto 0 auto; background:#fff; padding:20px 28px; border-radius:12px; box-shadow:0 2px 8px rgba(32,181,129,0.08);">
+        <li><a href="https://unsplash.com/photos/1513258496099-48168024aec0" target="_blank" style="color:#20b581;">Symbolbild Student (Unsplash)</a></li>
+        <li><a href="https://www.openstreetmap.org/" target="_blank" style="color:#20b581;">Kartenausschnitte: OpenStreetMap</a></li>
+        <li><a href="https://staticmap.openstreetmap.de/" target="_blank" style="color:#20b581;">OpenStreetMap Static Maps</a></li>
+    </ul>
+</body>
+</html>
