@@ -73,9 +73,12 @@
             background: #fff; color: #222; border: 1px solid rgba(0,0,0,0.06); padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:600;
             box-shadow: 0 4px 12px rgba(32,181,129,0.06);
         }
-        .tab-buttons button.active {
-            background: var(--accent, #20b581); color:#fff; border-color: transparent; box-shadow: 0 8px 24px rgba(32,181,129,0.14);
+        /* small theme-toggle inside the tab bar */
+        .tab-buttons #theme-toggle {
+            width:42px; height:42px; display:inline-flex; align-items:center; justify-content:center; padding:6px; border-radius:10px;
+            background:#fff; border:1px solid rgba(0,0,0,0.06); cursor:pointer; margin-left:6px;
         }
+        .tab-buttons #theme-toggle svg { width:18px; height:18px; display:block; }
         .tab-panel { display:none; background: #fff; padding:18px; border-radius:12px; box-shadow: 0 4px 16px rgba(32,181,129,0.06); }
         .tab-panel.active { display:block; }
 
@@ -111,6 +114,10 @@
             <button role="tab" data-tab="cv" aria-selected="false">Lebenslauf</button>
             <button role="tab" data-tab="works" aria-selected="false">Meine Wirkungsstätten</button>
             <button role="tab" data-tab="links" aria-selected="false">Links</button>
+            <!-- Theme toggle in the tab bar -->
+            <button id="theme-toggle" title="Dark/Light Mode" aria-pressed="false" aria-label="Design wechseln">
+                <!-- icon set by JS -->
+            </button>
         </div>
 
         <section id="about" class="tab-panel active" role="tabpanel" aria-hidden="false">
@@ -244,6 +251,60 @@
                     try { mapTrier.invalidateSize(); mapAK.invalidateSize(); mapMainz.invalidateSize(); } catch(e){}
                 }, 300);
             }
+        })();
+    </script>
+
+    <!-- Theme toggle script -->
+    <script>
+        (function(){
+            const toggle = document.getElementById('theme-toggle');
+            if (!toggle) return;
+
+            const sunSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="12" r="3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
+            const moonSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
+
+            function applyTheme(theme){
+                if (theme === 'dark'){
+                    document.documentElement.classList.add('dark-theme');
+                    toggle.innerHTML = sunSVG; // show sun to switch to light
+                    toggle.setAttribute('aria-pressed','true');
+                } else {
+                    document.documentElement.classList.remove('dark-theme');
+                    toggle.innerHTML = moonSVG; // show moon to switch to dark
+                    toggle.setAttribute('aria-pressed','false');
+                }
+            }
+
+            // initialize
+            const stored = localStorage.getItem('site-theme');
+            if (stored) applyTheme(stored);
+            else {
+                const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                applyTheme(prefersDark ? 'dark' : 'light');
+            }
+
+            toggle.addEventListener('click', function(e){
+                e.stopPropagation();
+                const isDark = document.documentElement.classList.toggle('dark-theme');
+                localStorage.setItem('site-theme', isDark ? 'dark' : 'light');
+                applyTheme(isDark ? 'dark' : 'light');
+            });
+
+            // Add theme CSS overrides to ensure legibility in dark mode
+            const style = document.createElement('style');
+            style.innerHTML = `
+                :root { --bg: #f8f9fa; --text: #222; --accent: #20b581; --card:#ffffff; --muted:#555; --panel-shadow: rgba(32,181,129,0.06); }
+                .dark-theme { --bg: #0f1720; --text: #e6eef0; --accent: #34d399; --card: #071021; --muted: #9aa6ad; --panel-shadow: rgba(0,0,0,0.6); }
+                body { background: var(--bg) !important; color: var(--text) !important; }
+                h1, h2 { color: var(--accent) !important; }
+                .tab-panel, table, .tabs > .tab-panel, ul { background: var(--card) !important; color: var(--text) !important; }
+                th { background: rgba(52,211,153,0.08) !important; color: var(--accent) !important; }
+                tr:hover td { background: rgba(255,255,255,0.02) !important; }
+                a { color: var(--accent) !important; }
+                .tab-buttons button { background: var(--card) !important; color: var(--text) !important; border-color: rgba(255,255,255,0.03) !important; }
+                .tab-buttons button.active { background: var(--accent) !important; color: #fff !important; }
+            `;
+            document.head.appendChild(style);
         })();
     </script>
 </body>
