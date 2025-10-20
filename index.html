@@ -86,6 +86,36 @@
         .panel-intro { text-align:center; }
         .panel-intro p { display:inline-block; max-width:680px; }
 
+        /* SIDE PANEL (Randpanel) */
+        #side-panel {
+            position: fixed;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 9999;
+            pointer-events: auto;
+        }
+        .side-btn {
+            width: 48px;
+            height: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: var(--card, #fff);
+            color: var(--text, #222);
+            border: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+            text-decoration: none;
+            transition: transform .12s ease, background .12s ease, color .12s ease;
+        }
+        .side-btn:hover { transform: translateX(6px); }
+        .side-btn svg { width:22px; height:22px; display:block; fill:currentColor; }
+        .side-label { font-size:12px; color:var(--muted,#555); text-align:center; margin-top:6px; }
+
         @media (max-width:720px) {
             .tabs { margin:10px; }
             .tab-buttons { gap:6px; }
@@ -100,6 +130,9 @@
             table {
                 font-size: 1em;
             }
+            /* small screens: bottom bar */
+            #side-panel { left: 50%; transform: translateX(-50%); bottom: 12px; top: auto; flex-direction: row; background: transparent; gap:12px; }
+            .side-btn { width:44px; height:44px; }
         }
     </style>
     <!-- Leaflet CSS & JS -->
@@ -182,6 +215,24 @@
             </ul>
         </section>
     </div>
+
+    <!-- Randpanel: Social links -->
+    <aside id="side-panel" aria-label="Soziale Medien">
+        <a class="side-btn" href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="LinkedIn">
+            <!-- LinkedIn SVG -->
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM.5 8h4v14h-4V8zm7 0h3.84v1.93h.05c.54-1.02 1.86-2.09 3.83-2.09 4.1 0 4.85 2.7 4.85 6.21V22h-4V15.6c0-1.54-.03-3.52-2.15-3.52-2.16 0-2.49 1.68-2.49 3.4V22H7.5V8z"/></svg>
+        </a>
+
+        <a class="side-btn" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="Instagram">
+            <!-- Instagram SVG -->
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm8 4.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM12 7.5A4.5 4.5 0 1012 16.5 4.5 4.5 0 0012 7.5z"/></svg>
+        </a>
+
+        <a class="side-btn" href="https://x.com/" target="_blank" rel="noopener noreferrer" title="X" aria-label="X (Twitter)">
+            <!-- X (Twitter) SVG -->
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 3.2c-.8.4-1.6.6-2.5.8.9-.6 1.6-1.4 1.9-2.4-.9.6-1.9 1-2.9 1.3C18.6 2 17.3 1.5 16 1.5c-2 0-3.6 1.6-3.6 3.6 0 .3 0 .6.1.9C9.1 6 5.1 4.1 2.3 1.2.9 3 .9 5.6 2.4 7.1c-.7 0-1.4-.2-2-.5 0 1.8 1.3 3.4 3 3.8-.6.2-1.2.2-1.8.1.5 1.6 2 2.8 3.7 2.8-1.4 1.1-3.1 1.8-5 1.8-.3 0-.6 0-.9-.1 1.9 1.2 4.1 1.9 6.5 1.9 7.8 0 12.1-6.5 12.1-12.1v-.6C21.5 4.8 22.3 4 23 3.2z"/></svg>
+        </a>
+    </aside>
 
     <!-- Leaflet maps will be initialized lazily when the 'works' tab is shown -->
     <script>
