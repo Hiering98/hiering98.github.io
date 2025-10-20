@@ -5,46 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Intro über Julian Hering</title>
     <style>
-        /* THEME VARIABLES (Light default, Dark overrides when .dark-theme auf html gesetzt) */
-        :root {
-            --bg: #f8f9fa;
-            --text: #222;
-            --accent: #20b581;
-            --card: #ffffff;
-            --muted: #555;
-            --shadow: rgba(32,181,129,0.10);
-        }
-        .dark-theme {
-            --bg: #0f1720;
-            --text: #e6eef0;
-            --accent: #34d399;
-            --card: #071021;
-            --muted: #9aa6ad;
-            --shadow: rgba(0,0,0,0.6);
-        }
-
-        /* Base styles */
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            background: #f8f9fa;
+            color: #222;
             margin: 0;
             padding: 0 10px;
             line-height: 1.8;
-            transition: background .25s ease, color .25s ease;
         }
         h1, h2 {
-            color: var(--accent);
+            color: #20b581;
             text-align: center;
             margin-top: 32px;
             margin-bottom: 18px;
         }
         table {
-            background: var(--card);
+            background: #fff;
             margin: 28px auto;
             width: 100%;
             max-width: 700px;
-            box-shadow: 0 4px 16px var(--shadow);
+            box-shadow: 0 4px 16px rgba(32,181,129,0.10);
             border-radius: 12px;
             overflow: hidden;
         }
@@ -54,11 +34,11 @@
             border-bottom: 1px solid #e9ecef;
         }
         th {
-            background: rgba(226,247,242,0.6);
-            color: var(--accent);
+            background: #e9f7f2;
+            color: #20b581;
         }
         tr:hover td {
-            background: rgba(240,250,247,0.6);
+            background: #f0faf7;
         }
         img {
             box-shadow: 0 4px 16px rgba(32,181,129,0.15);
@@ -67,7 +47,6 @@
         figcaption {
             margin-top: 10px;
             font-size: 1em;
-            color: var(--muted);
         }
         .gallery {
             display: flex;
@@ -87,29 +66,26 @@
             border-radius: 16px;
         }
 
-        /* THEME TOGGLE BUTTON (fixed top-right) */
-        #theme-toggle {
-            position: fixed;
-            top: 16px;
-            right: 16px;
-            width: 44px;
-            height: 44px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--card);
-            color: var(--text);
-            border: 1px solid rgba(0,0,0,0.06);
-            border-radius: 10px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-            cursor: pointer;
-            transition: background .2s ease, transform .08s ease, color .2s ease;
-            z-index: 9999;
+        /* TABBED LAYOUT */
+        .tabs { max-width: 1000px; margin: 18px auto 36px auto; }
+        .tab-buttons { display:flex; gap:8px; justify-content:center; margin-bottom:16px; flex-wrap:wrap; }
+        .tab-buttons button {
+            background: #fff; color: #222; border: 1px solid rgba(0,0,0,0.06); padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:600;
+            box-shadow: 0 4px 12px rgba(32,181,129,0.06);
         }
-        #theme-toggle:active { transform: scale(.98); }
-        #theme-toggle svg { width:22px; height:22px; display:block; }
+        .tab-buttons button.active {
+            background: var(--accent, #20b581); color:#fff; border-color: transparent; box-shadow: 0 8px 24px rgba(32,181,129,0.14);
+        }
+        .tab-panel { display:none; background: #fff; padding:18px; border-radius:12px; box-shadow: 0 4px 16px rgba(32,181,129,0.06); }
+        .tab-panel.active { display:block; }
 
-        @media (max-width: 720px) {
+        /* small adjustments for panels to match existing layout */
+        .panel-intro { text-align:center; }
+        .panel-intro p { display:inline-block; max-width:680px; }
+
+        @media (max-width:720px) {
+            .tabs { margin:10px; }
+            .tab-buttons { gap:6px; }
             .gallery {
                 flex-direction: column;
                 align-items: center;
@@ -128,130 +104,146 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
-    <!-- Insert theme toggle button top-right -->
-    <button id="theme-toggle" aria-label="Theme wechseln" title="Dark/Light Mode" aria-pressed="false">
-        <!-- default icon (will be updated by JS) -->
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-        </svg>
-    </button>
+    <!-- Tab navigation -->
+    <div class="tabs" id="site-tabs">
+        <div class="tab-buttons" role="tablist" aria-label="Seitenbereiche">
+            <button role="tab" data-tab="about" class="active" aria-selected="true">Über mich</button>
+            <button role="tab" data-tab="cv" aria-selected="false">Lebenslauf</button>
+            <button role="tab" data-tab="works" aria-selected="false">Meine Wirkungsstätten</button>
+            <button role="tab" data-tab="links" aria-selected="false">Links</button>
+        </div>
 
-    <h1>Über mich</h1>
-    <div style="display:flex; justify-content:center; align-items:center; margin-bottom:24px;">
-        <p style="max-width:500px; text-align:center; font-size:1.15em; background:#fff; padding:24px 32px; border-radius:16px; box-shadow:0 2px 8px rgba(32,181,129,0.08); color:#222;">Mein Name ist Julian Hering. Ich studiere im 5. Semester Geoinformatik und Vermessung an der Hochschule Mainz. Vor meinem Studium habe ich eine Ausbildung als Vermessungstechniker absolviert.</p>
+        <section id="about" class="tab-panel active" role="tabpanel" aria-hidden="false">
+            <h1>Über mich</h1>
+            <div class="panel-intro" style="display:flex; justify-content:center; align-items:center; margin-bottom:24px; flex-direction:column; gap:16px;">
+                <p style="max-width:680px; text-align:center; font-size:1.15em; background:#fff; padding:24px 32px; border-radius:16px; box-shadow:0 2px 8px rgba(32,181,129,0.08); color:#222;">Mein Name ist Julian Hering. Ich studiere im 5. Semester Geoinformatik und Vermessung an der Hochschule Mainz. Vor meinem Studium habe ich eine Ausbildung als Vermessungstechniker absolviert.</p>
+                <img src="https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=600&q=80" alt="Student beim Lernen" style="max-width:300px; width:100%; border-radius:8px;">
+                <figcaption style="text-align:center; font-style:italic; color:#555;">Symbolbild: Ein Student beim Lernen</figcaption>
+            </div>
+        </section>
+
+        <section id="cv" class="tab-panel" role="tabpanel" aria-hidden="true">
+            <h2>Lebenslauf</h2>
+            <table border="1" style="border-collapse: collapse; width: 100%;">
+                <tr>
+                    <th>Jahr</th>
+                    <th>Station</th>
+                    <th>Beschreibung</th>
+                </tr>
+                <tr>
+                    <td>2018–2021</td>
+                    <td>Ausbildung</td>
+                    <td>Vermessungstechniker</td>
+                </tr>
+                <tr>
+                    <td>2021–2023</td>
+                    <td>Berufserfahrung</td>
+                    <td>Vermessungstechniker</td>
+                </tr>
+                <tr>
+                    <td>2023–heute</td>
+                    <td>Studium</td>
+                    <td>Geoinformatik und Vermessung, HS Mainz</td>
+                </tr>
+            </table>
+        </section>
+
+        <section id="works" class="tab-panel" role="tabpanel" aria-hidden="true">
+            <h2>Meine Wirkungsstätten</h2>
+            <div class="gallery" style="margin-top:12px;">
+                <figure>
+                    <div id="map-trier" style="height:180px; width:100%; border-radius:16px;"></div>
+                    <figcaption style="font-style:italic; color:#555;">BBS GuT Trier</figcaption>
+                </figure>
+                <figure>
+                    <div id="map-ak" style="height:180px; width:100%; border-radius:16px;"></div>
+                    <figcaption style="font-style:italic; color:#555;">Vermessungsbüro Wassermann</figcaption>
+                </figure>
+                <figure>
+                    <div id="map-mainz" style="height:180px; width:100%; border-radius:16px;"></div>
+                    <figcaption style="font-style:italic; color:#555;">HS Mainz Standort Campus</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section id="links" class="tab-panel" role="tabpanel" aria-hidden="true">
+            <h2>Links</h2>
+            <ul style="max-width:700px; margin:0 auto 0 auto; background:#fff; padding:20px 28px; border-radius:12px; box-shadow:0 2px 8px rgba(32,181,129,0.08);">
+                <li><a href="https://unsplash.com/photos/1513258496099-48168024aec0" target="_blank" style="color:#20b581;">Symbolbild Student (Unsplash)</a></li>
+                <li><a href="https://www.openstreetmap.org/" target="_blank" style="color:#20b581;">Kartenausschnitte: OpenStreetMap</a></li>
+                <li><a href="https://staticmap.openstreetmap.de/" target="_blank" style="color:#20b581;">OpenStreetMap Static Maps</a></li>
+            </ul>
+        </section>
     </div>
-    
-    <h2>Lebenslauf</h2>
-    <table border="1" style="border-collapse: collapse; width: 100%;">
-        <tr>
-            <th>Jahr</th>
-            <th>Station</th>
-            <th>Beschreibung</th>
-        </tr>
-        <tr>
-            <td>2018–2021</td>
-            <td>Ausbildung</td>
-            <td>Vermessungstechniker</td>
-        </tr>
-        <tr>
-            <td>2021–2023</td>
-            <td>Berufserfahrung</td>
-            <td>Vermessungstechniker</td>
-        </tr>
-        <tr>
-            <td>2023–heute</td>
-            <td>Studium</td>
-            <td>Geoinformatik und Vermessung, HS Mainz</td>
-        </tr>
-    </table>
 
-    <img src="https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=600&q=80" alt="Student beim Lernen" style="display:block; margin:20px auto; max-width:300px; border-radius:8px;">
-    <figcaption style="text-align:center; font-style:italic; color:#555;">Symbolbild: Ein Student beim Lernen</figcaption>
-
-    <h2>Meine Wirkungsstätten</h2>
-    <div class="gallery">
-        <figure>
-            <div id="map-trier" style="height:180px; width:100%; border-radius:16px;"></div>
-            <figcaption style="font-style:italic; color:#555;">BBS GuT Trier</figcaption>
-        </figure>
-        <figure>
-            <div id="map-ak" style="height:180px; width:100%; border-radius:16px;"></div>
-            <figcaption style="font-style:italic; color:#555;">Vermessungsbüro Wassermann</figcaption>
-        </figure>
-        <figure>
-            <div id="map-mainz" style="height:180px; width:100%; border-radius:16px;"></div>
-            <figcaption style="font-style:italic; color:#555;">HS Mainz Standort Campus</figcaption>
-        </figure>
-    </div>
+    <!-- Leaflet maps will be initialized lazily when the 'works' tab is shown -->
     <script>
-        // Trier
-        var mapTrier = L.map('map-trier').setView([49.749992, 6.637143], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap'
-        }).addTo(mapTrier);
-        L.marker([49.749992, 6.637143]).addTo(mapTrier);
-        // Altenkirchen
-        var mapAK = L.map('map-ak').setView([50.688889, 7.648611], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap'
-        }).addTo(mapAK);
-        L.marker([50.688889, 7.648611]).addTo(mapAK);
-        // Mainz
-        var mapMainz = L.map('map-mainz').setView([49.9935, 8.2478], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap'
-        }).addTo(mapMainz);
-        L.marker([49.9935, 8.2478]).addTo(mapMainz);
-    </script>
+        (function(){
+            const tabs = document.querySelectorAll('.tab-buttons [role="tab"]');
+            const panels = document.querySelectorAll('.tab-panel');
+            let mapsInited = false;
 
-    <h2>Links</h2>
-    <ul style="max-width:700px; margin:32px auto 0 auto; background:#fff; padding:20px 28px; border-radius:12px; box-shadow:0 2px 8px rgba(32,181,129,0.08);">
-        <li><a href="https://unsplash.com/photos/1513258496099-48168024aec0" target="_blank" style="color:#20b581;">Symbolbild Student (Unsplash)</a></li>
-        <li><a href="https://www.openstreetmap.org/" target="_blank" style="color:#20b581;">Kartenausschnitte: OpenStreetMap</a></li>
-        <li><a href="https://staticmap.openstreetmap.de/" target="_blank" style="color:#20b581;">OpenStreetMap Static Maps</a></li>
-    </ul>
+            function activateTab(name){
+                tabs.forEach(btn => {
+                    const isActive = btn.dataset.tab === name;
+                    btn.classList.toggle('active', isActive);
+                    btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+                });
+                panels.forEach(p => {
+                    const isActive = p.id === name;
+                    p.classList.toggle('active', isActive);
+                    p.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+                });
 
-    <!-- after the existing map script and before </body> add the theme JS -->
-    <script>
-        (function() {
-            const toggle = document.getElementById('theme-toggle');
-            if (!toggle) return;
-
-            const sunSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="12" r="3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
-            const moonSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
-
-            function setIcon(isDark) {
-                toggle.innerHTML = isDark ? sunSVG : moonSVG; // show sun when dark (to switch to light)
-                toggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-            }
-
-            function applyTheme(theme) {
-                if (theme === 'dark') {
-                    document.documentElement.classList.add('dark-theme');
-                    setIcon(true);
-                } else {
-                    document.documentElement.classList.remove('dark-theme');
-                    setIcon(false);
+                // lazy init maps when works tab activated
+                if (name === 'works' && !mapsInited) {
+                    mapsInited = true;
+                    initMaps();
                 }
             }
 
-            // initialize from localStorage or system preference
-            const stored = localStorage.getItem('site-theme');
-            if (stored) {
-                applyTheme(stored);
-            } else {
-                const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-                applyTheme(prefersDark ? 'dark' : 'light');
-            }
-
-            toggle.addEventListener('click', function() {
-                const isDark = document.documentElement.classList.toggle('dark-theme');
-                localStorage.setItem('site-theme', isDark ? 'dark' : 'light');
-                setIcon(isDark);
+            tabs.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    activateTab(btn.dataset.tab);
+                    try { localStorage.setItem('active-tab', btn.dataset.tab); } catch(e){}
+                });
             });
+
+            // restore last tab
+            const last = localStorage.getItem('active-tab');
+            if (last) activateTab(last);
+
+            // Map initialization moved here so Leaflet renders correctly when container visible
+            function initMaps(){
+                // Trier
+                const mapTrier = L.map('map-trier').setView([49.749992, 6.637143], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap'
+                }).addTo(mapTrier);
+                L.marker([49.749992, 6.637143]).addTo(mapTrier);
+
+                // Altenkirchen
+                const mapAK = L.map('map-ak').setView([50.688889, 7.648611], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap'
+                }).addTo(mapAK);
+                L.marker([50.688889, 7.648611]).addTo(mapAK);
+
+                // Mainz
+                const mapMainz = L.map('map-mainz').setView([49.9935, 8.2478], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap'
+                }).addTo(mapMainz);
+                L.marker([49.9935, 8.2478]).addTo(mapMainz);
+
+                // ensure proper sizing after slight delay
+                setTimeout(() => {
+                    try { mapTrier.invalidateSize(); mapAK.invalidateSize(); mapMainz.invalidateSize(); } catch(e){}
+                }, 300);
+            }
         })();
     </script>
 </body>
