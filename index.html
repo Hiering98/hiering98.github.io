@@ -5,26 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Intro über Julian Hering</title>
     <style>
+        /* THEME VARIABLES (Light default, Dark overrides when .dark-theme auf html gesetzt) */
+        :root {
+            --bg: #f8f9fa;
+            --text: #222;
+            --accent: #20b581;
+            --card: #ffffff;
+            --muted: #555;
+            --shadow: rgba(32,181,129,0.10);
+        }
+        .dark-theme {
+            --bg: #0f1720;
+            --text: #e6eef0;
+            --accent: #34d399;
+            --card: #071021;
+            --muted: #9aa6ad;
+            --shadow: rgba(0,0,0,0.6);
+        }
+
+        /* Base styles */
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f8f9fa;
-            color: #222;
+            background: var(--bg);
+            color: var(--text);
             margin: 0;
             padding: 0 10px;
             line-height: 1.8;
+            transition: background .25s ease, color .25s ease;
         }
         h1, h2 {
-            color: #20b581;
+            color: var(--accent);
             text-align: center;
             margin-top: 32px;
             margin-bottom: 18px;
         }
         table {
-            background: #fff;
+            background: var(--card);
             margin: 28px auto;
             width: 100%;
             max-width: 700px;
-            box-shadow: 0 4px 16px rgba(32,181,129,0.10);
+            box-shadow: 0 4px 16px var(--shadow);
             border-radius: 12px;
             overflow: hidden;
         }
@@ -34,11 +54,11 @@
             border-bottom: 1px solid #e9ecef;
         }
         th {
-            background: #e9f7f2;
-            color: #20b581;
+            background: rgba(226,247,242,0.6);
+            color: var(--accent);
         }
         tr:hover td {
-            background: #f0faf7;
+            background: rgba(240,250,247,0.6);
         }
         img {
             box-shadow: 0 4px 16px rgba(32,181,129,0.15);
@@ -47,6 +67,7 @@
         figcaption {
             margin-top: 10px;
             font-size: 1em;
+            color: var(--muted);
         }
         .gallery {
             display: flex;
@@ -65,6 +86,29 @@
             box-shadow: 0 4px 16px rgba(32,181,129,0.18);
             border-radius: 16px;
         }
+
+        /* THEME TOGGLE BUTTON (fixed top-right) */
+        #theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            width: 44px;
+            height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--card);
+            color: var(--text);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 10px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+            cursor: pointer;
+            transition: background .2s ease, transform .08s ease, color .2s ease;
+            z-index: 9999;
+        }
+        #theme-toggle:active { transform: scale(.98); }
+        #theme-toggle svg { width:22px; height:22px; display:block; }
+
         @media (max-width: 720px) {
             .gallery {
                 flex-direction: column;
@@ -84,6 +128,14 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
+    <!-- Insert theme toggle button top-right -->
+    <button id="theme-toggle" aria-label="Theme wechseln" title="Dark/Light Mode" aria-pressed="false">
+        <!-- default icon (will be updated by JS) -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+    </button>
+
     <h1>Über mich</h1>
     <div style="display:flex; justify-content:center; align-items:center; margin-bottom:24px;">
         <p style="max-width:500px; text-align:center; font-size:1.15em; background:#fff; padding:24px 32px; border-radius:16px; box-shadow:0 2px 8px rgba(32,181,129,0.08); color:#222;">Mein Name ist Julian Hering. Ich studiere im 5. Semester Geoinformatik und Vermessung an der Hochschule Mainz. Vor meinem Studium habe ich eine Ausbildung als Vermessungstechniker absolviert.</p>
@@ -161,5 +213,46 @@
         <li><a href="https://www.openstreetmap.org/" target="_blank" style="color:#20b581;">Kartenausschnitte: OpenStreetMap</a></li>
         <li><a href="https://staticmap.openstreetmap.de/" target="_blank" style="color:#20b581;">OpenStreetMap Static Maps</a></li>
     </ul>
+
+    <!-- after the existing map script and before </body> add the theme JS -->
+    <script>
+        (function() {
+            const toggle = document.getElementById('theme-toggle');
+            if (!toggle) return;
+
+            const sunSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="12" r="3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
+            const moonSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
+
+            function setIcon(isDark) {
+                toggle.innerHTML = isDark ? sunSVG : moonSVG; // show sun when dark (to switch to light)
+                toggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+            }
+
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark-theme');
+                    setIcon(true);
+                } else {
+                    document.documentElement.classList.remove('dark-theme');
+                    setIcon(false);
+                }
+            }
+
+            // initialize from localStorage or system preference
+            const stored = localStorage.getItem('site-theme');
+            if (stored) {
+                applyTheme(stored);
+            } else {
+                const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                applyTheme(prefersDark ? 'dark' : 'light');
+            }
+
+            toggle.addEventListener('click', function() {
+                const isDark = document.documentElement.classList.toggle('dark-theme');
+                localStorage.setItem('site-theme', isDark ? 'dark' : 'light');
+                setIcon(isDark);
+            });
+        })();
+    </script>
 </body>
 </html>
