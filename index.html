@@ -147,6 +147,7 @@
             <button role="tab" data-tab="cv" aria-selected="false">Lebenslauf</button>
             <button role="tab" data-tab="works" aria-selected="false">Meine Wirkungsstätten</button>
             <button role="tab" data-tab="links" aria-selected="false">Links</button>
+            <button role="tab" data-tab="news" aria-selected="false">News</button>
             <!-- Theme toggle in the tab bar -->
             <button id="theme-toggle" title="Dark/Light Mode" aria-pressed="false" aria-label="Design wechseln">
                 <!-- icon set by JS -->
@@ -214,6 +215,13 @@
                 <li><a href="https://staticmap.openstreetmap.de/" target="_blank" style="color:#20b581;">OpenStreetMap Static Maps</a></li>
             </ul>
         </section>
+
+        <section id="news" class="tab-panel" role="tabpanel" aria-hidden="true">
+            <h2>Neuigkeiten</h2>
+            <div id="news-container" style="max-width:700px; margin:0 auto; background:#fff; padding:18px; border-radius:12px; box-shadow:0 2px 8px rgba(32,181,129,0.08);">
+                <div id="news-list" aria-live="polite">Lade Neuigkeiten…</div>
+            </div>
+        </section>
     </div>
 
     <!-- Randpanel: Social links -->
@@ -240,6 +248,7 @@
             const tabs = document.querySelectorAll('.tab-buttons [role="tab"]');
             const panels = document.querySelectorAll('.tab-panel');
             let mapsInited = false;
+            let newsInited = false;
 
             function activateTab(name){
                 tabs.forEach(btn => {
@@ -257,6 +266,12 @@
                 if (name === 'works' && !mapsInited) {
                     mapsInited = true;
                     initMaps();
+                }
+
+                // lazy load news when news tab activated
+                if (name === 'news' && !newsInited) {
+                    newsInited = true;
+                    initNews();
                 }
             }
 
@@ -301,6 +316,80 @@
                 setTimeout(() => {
                     try { mapTrier.invalidateSize(); mapAK.invalidateSize(); mapMainz.invalidateSize(); } catch(e){}
                 }, 300);
+            }
+
+            // Initialize and render news from news.json
+            function initNews(){
+                const container = document.getElementById('news-list');
+                if (!container) return;
+
+                fetch('news.json', {cache: 'no-store'})
+                    .then(resp => {
+                        if (!resp.ok) throw new Error('Fehler beim Laden der Nachrichten');
+                        return resp.json();
+                    })
+                    .then(data => renderNews(data, container))
+                    .catch(err => {
+                        console.error(err);
+                        container.innerHTML = '<p style="color:#b33;">Die Neuigkeiten konnten nicht geladen werden.</p>';
+                    });
+            }
+
+            function renderNews(items, container){
+                if (!Array.isArray(items) || items.length === 0){
+                    container.innerHTML = '<p>Keine Neuigkeiten vorhanden.</p>';
+                    return;
+                }
+
+                const list = document.createElement('div');
+                list.style.display = 'flex';
+                list.style.flexDirection = 'column';
+                list.style.gap = '12px';
+
+                items.forEach(it => {
+                    const card = document.createElement('article');
+                    card.style.padding = '12px 14px';
+                    card.style.borderRadius = '10px';
+                    card.style.background = 'linear-gradient(180deg, rgba(32,181,129,0.02), rgba(32,181,129,0.01))';
+                    card.style.boxShadow = '0 2px 8px rgba(32,181,129,0.04)';
+
+                    const title = document.createElement('h3');
+                    title.textContent = it.title || 'Ohne Titel';
+                    title.style.margin = '0 0 6px 0';
+                    title.style.color = 'var(--text, #222)';
+                    title.style.fontSize = '1.05em';
+
+                    const meta = document.createElement('div');
+                    meta.textContent = it.date || '';
+                    meta.style.fontSize = '0.85em';
+                    meta.style.color = 'var(--muted, #555)';
+                    meta.style.marginBottom = '8px';
+
+                    const summary = document.createElement('p');
+                    summary.textContent = it.summary || '';
+                    summary.style.margin = '0 0 8px 0';
+
+                    card.appendChild(title);
+                    if (meta.textContent) card.appendChild(meta);
+                    card.appendChild(summary);
+
+                    if (it.link){
+                        const a = document.createElement('a');
+                        a.href = it.link;
+                        a.textContent = 'Mehr lesen';
+                        a.target = '_blank';
+                        a.rel = 'noopener noreferrer';
+                        a.style.color = 'var(--accent, #20b581)';
+                        a.style.fontWeight = '600';
+                        card.appendChild(a);
+                    }
+
+                    list.appendChild(card);
+                });
+
+                // replace loading text
+                container.innerHTML = '';
+                container.appendChild(list);
             }
         })();
     </script>
