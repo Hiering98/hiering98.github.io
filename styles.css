@@ -1,0 +1,88 @@
+:root { --bg: #f8f9fa; --text: #222; --accent: #20b581; --card:#ffffff; --muted:#555; --panel-shadow: rgba(32,181,129,0.06); }
+.dark-theme { --bg: #0f1720; --text: #e6eef0; --accent: #34d399; --card: #071021; --muted: #9aa6ad; --panel-shadow: rgba(0,0,0,0.6); }
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 0 10px;
+    line-height: 1.8;
+}
+
+h1, h2 {
+    color: var(--accent);
+    text-align: center;
+    margin-top: 32px;
+    margin-bottom: 18px;
+}
+
+table {
+    background: var(--card);
+    margin: 28px auto;
+    width: 100%;
+    max-width: 700px;
+    box-shadow: 0 4px 16px rgba(32,181,129,0.10);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 16px 12px;
+    text-align: left;
+    border-bottom: 1px solid #e9ecef;
+}
+
+th {
+    background: #e9f7f2;
+    color: var(--accent);
+}
+
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+img { box-shadow: 0 4px 16px rgba(32,181,129,0.15); border-radius: 12px; }
+
+figcaption { margin-top: 10px; font-size: 1em; }
+
+.gallery { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 32px; margin-top: 32px; }
+.gallery figure { text-align: center; width: 30%; min-width: 220px; margin: 0; }
+.gallery img { box-shadow: 0 4px 16px rgba(32,181,129,0.18); border-radius: 16px; }
+
+/* TABBED LAYOUT */
+.tabs { max-width: 1000px; margin: 18px auto 36px auto; }
+.tab-buttons { display:flex; gap:8px; justify-content:center; margin-bottom:16px; flex-wrap:wrap; }
+.tab-buttons button { background: var(--card); color: var(--text); border: 1px solid rgba(0,0,0,0.06); padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:600; box-shadow: 0 4px 12px rgba(32,181,129,0.06); }
+.tab-buttons #theme-toggle { width:42px; height:42px; display:inline-flex; align-items:center; justify-content:center; padding:6px; border-radius:10px; background:var(--card); border:1px solid rgba(0,0,0,0.06); cursor:pointer; margin-left:6px; }
+.tab-buttons #theme-toggle svg { width:18px; height:18px; display:block; }
+.tab-panel { display:none; background: var(--card); padding:18px; border-radius:12px; box-shadow: 0 4px 16px var(--panel-shadow); }
+.tab-panel.active { display:block; }
+
+.panel-intro { text-align:center; }
+.panel-intro p { display:inline-block; max-width:680px; }
+
+/* SIDE PANEL (Randpanel) */
+#side-panel { position: fixed; left: 16px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 9999; pointer-events: auto; }
+.side-btn { width: 48px; height: 48px; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; background: var(--card); color: var(--text); border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 6px 20px rgba(0,0,0,0.06); text-decoration: none; transition: transform .12s ease, background .12s ease, color .12s ease; }
+.side-btn:hover { transform: translateX(6px); }
+.side-btn svg { width:22px; height:22px; display:block; fill:currentColor; }
+.side-label { font-size:12px; color:var(--muted); text-align:center; margin-top:6px; }
+
+@media (max-width:720px) {
+    .tabs { margin:10px; }
+    .tab-buttons { gap:6px; }
+    .gallery { flex-direction: column; align-items: center; }
+    .gallery figure { width: 95%; margin-bottom: 28px; }
+    table { font-size: 1em; }
+    /* small screens: bottom bar */
+    #side-panel { left: 50%; transform: translateX(-50%); bottom: 12px; top: auto; flex-direction: row; background: transparent; gap:12px; }
+    .side-btn { width:44px; height:44px; }
+}
+
+/* Theme related overrides that previously were injected by JS */
+.tab-buttons button.active { background: var(--accent); color: #fff; }
+a { color: var(--accent); }
+th { background: rgba(52,211,153,0.08); color: var(--accent); }
+tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* small utility */
+[aria-live] { min-height: 32px; }
