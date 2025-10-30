@@ -18,6 +18,7 @@
             <button role="tab" data-tab="works" aria-selected="false">Meine Wirkungsstätten</button>
             <button role="tab" data-tab="links" aria-selected="false">Links</button>
             <button role="tab" data-tab="news" aria-selected="false">News</button>
+            <button role="tab" data-tab="karten" aria-selected="false">Karten</button>
             <!-- Theme toggle in the tab bar -->
             <button id="theme-toggle" title="Dark/Light Mode" aria-pressed="false" aria-label="Design wechseln">
                 <!-- icon set by JS -->
@@ -77,6 +78,35 @@
             </div>
         </section>
 
+        <section id="karten" class="tab-panel" role="tabpanel" aria-hidden="true">
+            <h2>Karten</h2>
+            <div style="max-width:1100px; margin:0 auto 12px;">
+                <p style="text-align:center; color:var(--muted, #555);">Vier eingebettete Karten aus dem Repository. Die Karten werden beim ersten Öffnen geladen.</p>
+
+                <div class="karte-grid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:12px;">
+                    <div style="background:var(--card,#fff); padding:6px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+                        <div style="font-weight:600; margin-bottom:6px; color:var(--accent,#20b581);">Basiskarte</div>
+                        <iframe class="karte-embed" data-src="https://hiering98.github.io/map_1_basiskarte.html" loading="lazy" title="Basiskarte" style="width:100%; height:320px; border:0; border-radius:8px; background:#f6f6f6"></iframe>
+                    </div>
+
+                    <div style="background:var(--card,#fff); padding:6px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+                        <div style="font-weight:600; margin-bottom:6px; color:var(--accent,#20b581);">Punkte</div>
+                        <iframe class="karte-embed" data-src="https://hiering98.github.io/map_2_punkte.html" loading="lazy" title="Punkte" style="width:100%; height:320px; border:0; border-radius:8px; background:#f6f6f6"></iframe>
+                    </div>
+
+                    <div style="background:var(--card,#fff); padding:6px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+                        <div style="font-weight:600; margin-bottom:6px; color:var(--accent,#20b581);">Reiseroute</div>
+                        <iframe class="karte-embed" data-src="https://hiering98.github.io/map_3_reiseroute.html" loading="lazy" title="Reiseroute" style="width:100%; height:320px; border:0; border-radius:8px; background:#f6f6f6"></iframe>
+                    </div>
+
+                    <div style="background:var(--card,#fff); padding:6px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+                        <div style="font-weight:600; margin-bottom:6px; color:var(--accent,#20b581);">Flächen (online)</div>
+                        <iframe class="karte-embed" data-src="https://hiering98.github.io/map_4_flaechen_online.html" loading="lazy" title="Flächen online" style="width:100%; height:320px; border:0; border-radius:8px; background:#f6f6f6"></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="links" class="tab-panel" role="tabpanel" aria-hidden="true">
             <h2>Links</h2>
             <ul style="max-width:700px; margin:0 auto 0 auto; background:#fff; padding:20px 28px; border-radius:12px; box-shadow:0 2px 8px rgba(32,181,129,0.08);">
@@ -119,6 +149,7 @@
             const panels = document.querySelectorAll('.tab-panel');
             let mapsInited = false;
             let newsInited = false;
+            let kartenInited = false;
 
             function activateTab(name){
                 tabs.forEach(btn => {
@@ -136,6 +167,12 @@
                 if (name === 'works' && !mapsInited) {
                     mapsInited = true;
                     initMaps();
+                }
+
+                // lazy init Karten embeds (set iframe src on first open)
+                if (name === 'karten' && !kartenInited) {
+                    kartenInited = true;
+                    loadKartenEmbeds();
                 }
 
                 // lazy load news when news tab activated
@@ -186,6 +223,36 @@
                 setTimeout(() => {
                     try { mapTrier.invalidateSize(); mapAK.invalidateSize(); mapMainz.invalidateSize(); } catch(e){}
                 }, 300);
+            }
+
+            // Lazy-load iframe embeds inside the Karten tab
+            function loadKartenEmbeds(){
+                const iframes = document.querySelectorAll('.karte-embed');
+                if (!iframes || iframes.length === 0) return;
+
+                iframes.forEach(iframe => {
+                    const src = iframe.dataset.src;
+                    if (!src) return;
+
+                    // Set src to start loading; keep loading="lazy" for browser hints
+                    iframe.src = src;
+
+                    // Optional: show console info on load/error
+                    iframe.addEventListener('load', () => {
+                        console.log('Karten-iframe geladen:', src);
+                    });
+                    iframe.addEventListener('error', () => {
+                        console.error('Fehler beim Laden des iframes:', src);
+                        // show simple fallback message inside iframe container
+                        try {
+                            const p = document.createElement('div');
+                            p.textContent = 'Die Karte konnte nicht geladen werden.';
+                            p.style.color = 'var(--muted,#555)';
+                            iframe.parentElement.appendChild(p);
+                            iframe.style.display = 'none';
+                        } catch(e){}
+                    });
+                });
             }
 
             // Initialize and render news from news.json
